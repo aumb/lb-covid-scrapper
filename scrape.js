@@ -1,5 +1,6 @@
 const request = require('request');
 const cheerio = require('cheerio');
+const axios = require('axios');
 
 request('https://corona.ministryinfo.gov.lb/', (error, response, html) => {
     if (!error && response.statusCode == 200) {
@@ -35,12 +36,14 @@ request('https://corona.ministryinfo.gov.lb/', (error, response, html) => {
 
         console.log(countryCaseMap);
 
-
+        axios
+            .post("http://127.0.0.1:8000/api/cases", Object.fromEntries(countryCaseMap))
+            .then((res) => {
+                console.log(`statusCode: ${res.statusCode}`);
+                console.log(res);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
     }
 });
-
-// function findTextAndReturnRemainder(text, target) {
-//     var chopFront = target.substring(target.search(variable) + variable.length, target.length);
-//     var result = chopFront.substring(0, chopFront.search(";"));
-//     return result;
-// }
